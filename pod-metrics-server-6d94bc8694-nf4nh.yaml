@@ -1,0 +1,164 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: "2024-05-28T20:30:19Z"
+  generateName: metrics-server-6d94bc8694-
+  labels:
+    k8s-app: metrics-server
+    pod-template-hash: 6d94bc8694
+  name: metrics-server-6d94bc8694-nf4nh
+  namespace: kube-system
+  ownerReferences:
+  - apiVersion: apps/v1
+    blockOwnerDeletion: true
+    controller: true
+    kind: ReplicaSet
+    name: metrics-server-6d94bc8694
+    uid: 2251c4c6-a628-4cd5-b133-e33ed08356b4
+  resourceVersion: "28768"
+  uid: 40e13435-b92d-4f06-9e38-cec0164638f0
+spec:
+  containers:
+  - args:
+    - --cert-dir=/tmp
+    - --secure-port=10250
+    - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
+    - --kubelet-use-node-status-port
+    - --metric-resolution=15s
+    - --kubelet-insecure-tls
+    image: registry.k8s.io/metrics-server/metrics-server:v0.7.1
+    imagePullPolicy: IfNotPresent
+    livenessProbe:
+      failureThreshold: 3
+      httpGet:
+        path: /livez
+        port: https
+        scheme: HTTPS
+      periodSeconds: 10
+      successThreshold: 1
+      timeoutSeconds: 1
+    name: metrics-server
+    ports:
+    - containerPort: 10250
+      name: https
+      protocol: TCP
+    readinessProbe:
+      failureThreshold: 3
+      httpGet:
+        path: /readyz
+        port: https
+        scheme: HTTPS
+      initialDelaySeconds: 20
+      periodSeconds: 10
+      successThreshold: 1
+      timeoutSeconds: 1
+    resources:
+      requests:
+        cpu: 100m
+        memory: 200Mi
+      limits:
+        cpu: 100m
+        memory: 200Mi
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+      runAsUser: 1000
+      seccompProfile:
+        type: RuntimeDefault
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /tmp
+      name: tmp-dir
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-vdk7q
+      readOnly: true
+  dnsPolicy: ClusterFirst
+  enableServiceLinks: true
+  nodeName: docker-desktop
+  nodeSelector:
+    kubernetes.io/os: linux
+  preemptionPolicy: PreemptLowerPriority
+  priority: 2000000000
+  priorityClassName: system-cluster-critical
+  restartPolicy: Always
+  schedulerName: default-scheduler
+  securityContext: {}
+  serviceAccount: metrics-server
+  serviceAccountName: metrics-server
+  terminationGracePeriodSeconds: 30
+  tolerations:
+  - effect: NoExecute
+    key: node.kubernetes.io/not-ready
+    operator: Exists
+    tolerationSeconds: 300
+  - effect: NoExecute
+    key: node.kubernetes.io/unreachable
+    operator: Exists
+    tolerationSeconds: 300
+  volumes:
+  - emptyDir: {}
+    name: tmp-dir
+  - name: kube-api-access-vdk7q
+    projected:
+      defaultMode: 420
+      sources:
+      - serviceAccountToken:
+          expirationSeconds: 3607
+          path: token
+      - configMap:
+          items:
+          - key: ca.crt
+            path: ca.crt
+          name: kube-root-ca.crt
+      - downwardAPI:
+          items:
+          - fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+            path: namespace
+status:
+  conditions:
+  - lastProbeTime: null
+    lastTransitionTime: "2024-05-28T20:30:19Z"
+    status: "True"
+    type: Initialized
+  - lastProbeTime: null
+    lastTransitionTime: "2024-05-28T20:30:19Z"
+    message: 'containers with unready status: [metrics-server]'
+    reason: ContainersNotReady
+    status: "False"
+    type: Ready
+  - lastProbeTime: null
+    lastTransitionTime: "2024-05-28T20:30:19Z"
+    message: 'containers with unready status: [metrics-server]'
+    reason: ContainersNotReady
+    status: "False"
+    type: ContainersReady
+  - lastProbeTime: null
+    lastTransitionTime: "2024-05-28T20:30:19Z"
+    status: "True"
+    type: PodScheduled
+  containerStatuses:
+  - containerID: docker://4b4b51ec40e6b21bd435c4a69f37b0e6d17c8925b397cfa8b7a69b56845974f1
+    image: registry.k8s.io/metrics-server/metrics-server:v0.7.1
+    imageID: docker-pullable://registry.k8s.io/metrics-server/metrics-server@sha256:db3800085a0957083930c3932b17580eec652cfb6156a05c0f79c7543e80d17a
+    lastState: {}
+    name: metrics-server
+    ready: false
+    restartCount: 0
+    started: true
+    state:
+      running:
+        startedAt: "2024-05-28T20:30:25Z"
+  hostIP: 192.168.65.3
+  phase: Running
+  podIP: 10.1.0.23
+  podIPs:
+  - ip: 10.1.0.23
+  qosClass: Burstable
+  startTime: "2024-05-28T20:30:19Z"
