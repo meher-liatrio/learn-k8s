@@ -1,0 +1,20 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: require-labels
+spec:
+  validationFailureAction: Enforce
+  rules:
+  - name: check-container-image
+    match:
+      resources:
+        kinds:
+        - Pod
+        namespaces:
+        - myapp
+    validate:
+      message: "All containers must use the 'myapp:latest' image"
+      pattern:
+        spec:
+          containers:
+          - image: "myapp:latest"
